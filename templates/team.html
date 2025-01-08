@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Team - Saintgits ACM Student Chapter{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Team</h1>
+    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+        Meet the dedicated members and leaders of the Saintgits ACM Student Chapter.
+    </p>
+</div>
+
+<!-- Faculty Sponsor Section -->
+<div class="mb-16">
+    <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">Faculty Sponsor</h2>
+    <div class="flex justify-center">
+        <div class="w-full max-w-sm bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 text-center">
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                    <img class="w-full h-full rounded-full object-cover" 
+                         src="{{ url_for('static', filename='images/faculty-sponsor.jpg') }}" 
+                         alt="Faculty Sponsor">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Er. Gayathri J L</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-3">Faculty Sponsor</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Department of Computer Science and Engineering</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Executive Committee -->
+<div class="mb-16">
+    <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">Executive Committee</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Chairperson -->
+        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 text-center">
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                    <img class="w-full h-full rounded-full object-cover" 
+                         src="{{ url_for('static', filename='images/DiyaNair.jpg') }}" 
+                         alt="Chairperson">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Diya Nair</h3>
+                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Chairperson</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
+            </div>
+        </div>
+
+        <!-- Vice Chairperson -->
+        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 text-center">
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                    <img class="w-full h-full rounded-full object-cover" 
+                         src="{{ url_for('static', filename='images/AbinR.jpg') }}" 
+                         alt="Vice Chairperson">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Abin Roy</h3>
+                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Vice Chairperson</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
+            </div>
+        </div>
+
+        <!-- Treasurer -->
+        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 text-center">
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                    <img class="w-full h-full rounded-full object-cover" 
+                         src="{{ url_for('static', filename='images/NandanaA.jpg') }}" 
+                         alt="Treasurer">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Nandana A</h3>
+                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Treasurer</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Department Heads -->
+<div class="mb-16">
+    <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">Core Team Heads</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Operations Head -->
+        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 text-center">
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                    <img class="w-full h-full rounded-full object-cover" 
+                         src="{{ url_for('static', filename='images/AdithyaA.jpg') }}" 
+                         alt="Operations Head">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Adithya Arun</h3>
+                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Operations Head</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
+            </div>
+        </div>
+
+        <!-- Marketing Head -->
+        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 text-center">
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                    <img class="w-full h-full rounded-full object-cover" 
+                         src="{{ url_for('static', filename='images/GayathriSree.jpg') }}" 
+                         alt="Marketing Head">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Gayathri Sreekumar</h3>
+                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Marketing Head</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
+            </div>
+        </div>
+
+        <!-- Media Head -->
+        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 text-center">
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                    <img class="w-full h-full rounded-full object-cover" 
+                         src="{{ url_for('static', filename='images/JeevanJ.jpg') }}" 
+                         alt="Media Head - Actual Name">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Jeevan Jigi</h3>
+                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Media Head</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

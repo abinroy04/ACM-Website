@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Events - Saintgits ACM Student Chapter{% endblock %}
+
+{% block content %}
+<div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Events & Activities</h1>
+    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+        Discover upcoming events, workshops, and competitions organized by our chapter.
+    </p>
+</div>
+
+<!-- Events Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="events-grid">
+    <!-- Event Card 1 -->
+    <div class="event-card bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow" data-category="workshop">
+        <img src="{{ url_for('static', filename='images/event1.jpg') }}" alt="Coding Workshop" class="w-full h-48 object-cover">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-sm text-blue-600 dark:text-blue-400 font-semibold">Upcoming</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">March 2025</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">BootCamp with TCS</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">Learn modern web development techniques with hands-on practice sessions.</p>
+            <div class="flex items-center justify-between">
+                <span class="text-sm bg-blue-100 dark:bg-blue-200 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full">Workshop</span>
+                <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">Register Now →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Card 2 -->
+    <div class="event-card bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow" data-category="hackathon">
+        <img src="{{ url_for('static', filename='images/event2.jpg') }}" alt="Hackathon" class="w-full h-48 object-cover">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-sm text-green-600 dark:text-green-400 font-semibold">Registration Open</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">Feb x, 2025</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Lumino 25</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">30-hour coding challenge to solve real-world problems with innovative solutions.</p>
+            <div class="flex items-center justify-between">
+                <span class="text-sm bg-green-100 dark:bg-green-200 text-green-600 dark:text-green-400 px-3 py-1 rounded-full">Hackathon</span>
+                <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">Register Now →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Card 3 -->
+    <div class="event-card bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow" data-category="webinar">
+        <img src="{{ url_for('static', filename='images/event3.jpg') }}" alt="AI Webinar" class="w-full h-48 object-cover">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-sm text-gray-600 dark:text-gray-400 font-semibold">Coming Soon</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">Mar 5, 2025</span>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Webinar</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">Explore the latest trends in xx and yy with industry experts.</p>
+            <div class="flex items-center justify-between">
+                <span class="text-sm bg-gray-100 dark:bg-gray-200 text-gray-600 dark:text-gray-400 px-3 py-1 rounded-full">Webinar</span>
+                <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">Notify Me →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Past Events Section -->
+<div class="mt-16">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Past Events</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Past Event Card -->
+        <div class="event-card bg-gray-50 dark:bg-dark-secondary rounded-lg overflow-hidden hover:bg-gray-100 dark:hover:bg-dark-primary transition-colors" data-category="workshop">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Nov 12, 2024</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Power BI Workshop</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-4">Introduction to Power BI, fundamentals and best practices.</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm bg-blue-100 dark:bg-blue-200 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full">Workshop</span>
+                    <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">View Highlights →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Subscription -->
+<div class="mt-16 bg-blue-50 dark:bg-dark-secondary rounded-lg p-8">
+    <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Stay Updated</h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">Subscribe to our newsletter to receive updates about upcoming events.</p>
+        <form class="flex flex-col sm:flex-row gap-4 justify-center">
+            <input type="email" placeholder="Enter your email" 
+                   class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
+            <button type="submit" 
+                    class="px-6 py-2 bg-blue-600 dark:bg-blue-400 text-white dark:text-gray-900 rounded-md hover:bg-blue-700 dark:hover:bg-blue-500 transition-colors">
+                Subscribe
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Removed all JavaScript related to filtering -->
+{% endblock %}
