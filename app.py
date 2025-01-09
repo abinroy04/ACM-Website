@@ -145,7 +145,9 @@ def get_events_data():
                 'title': 'BootCamp with TCS',
                 'description': 'Learn modern web development techniques with hands-on practice sessions.',
                 'category': {'name': 'Workshop', 'color': 'blue'},
-                'registration_enabled': 0
+                'registration_enabled': 0,
+                'registration_fee': 100,
+                'event_id': 'bootcamp_tcs'
             },
             {
                 'image': 'hackathon.png',
@@ -154,7 +156,9 @@ def get_events_data():
                 'title': 'Lumino 25',
                 'description': '30-hour coding challenge to solve real-world problems with innovative solutions.',
                 'category': {'name': 'Hackathon', 'color': 'green'},
-                'registration_enabled': 1
+                'registration_enabled': 1,
+                'registration_fee': 250,
+                'event_id': 'lumino_25'
             }
         ],
         'past': [
@@ -294,33 +298,59 @@ def send_registration_email(form_data, file_data):
 
 @app.route('/registration', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        # Get form data
-        form_data = {
-            'full_name': request.form.get('full_name'),
-            'phone': request.form.get('phone'),
-            'email': request.form.get('email'),
-            'college': request.form.get('college'),
-            'event': request.form.get('event')
-        }
-        
-        # Handle file data
-        file_data = None
-        if 'payment_proof' in request.files:
-            file = request.files['payment_proof']
-            if file and allowed_file(file.filename):
-                file_data = file.read()  # Read file data directly
-        
-        # Send email
-        if send_registration_email(form_data, file_data):
-            flash('Registration successful! We will contact you soon.', 'success')
-        else:
-            flash('There was an error processing your registration. Please try again.', 'error')
-        
-        return redirect(url_for('registeration'))
+    events_data = get_events_data()
+    available_events = [event for event in events_data['upcoming'] 
+                       if event['registration_enabled'] == 1]
     
-    return render_template('registration.html')
-
+    if request.method == 'POST':
+        try:
+            # Get form data
+            form_data = {
+                'full_name': request.form.get('full_name'),
+                'phone': request.form.get('phone'),
+                'email': request.form.get('email'),
+                'college': request.form.get('college'),
+                'event': request.form.get('event')
+            }
+            
+            # Validate required fields
+            if not all(form_data.values()):
+                flash('Please fill in all required fields.', 'error')
+                app.logger.warning('Form validation failed: missing required fields')
+                return redirect(url_for('register'))
+            
+            # Handle file data
+            file_data = None
+            if 'payment_proof' in request.files:
+                file = request.files['payment_proof']
+                if file and file.filename and allowed_file(file.filename):
+                    file_data = file.read()
+                else:
+                    flash('Please upload a valid image file (PNG, JPG, JPEG, or GIF).', 'error')
+                    app.logger.warning('Invalid file upload attempt')
+                    return redirect(url_for('register'))
+            else:
+                flash('Payment proof is required.', 'error')
+                app.logger.warning('No file uploaded')
+                return redirect(url_for('register'))
+            
+            # Send email
+            email_sent = send_registration_email(form_data, file_data)
+            if email_sent:
+                app.logger.info(f'Registration successful for: {form_data["email"]}')
+                flash(f'Registration successful, {form_data["full_name"]}!', 'success')
+            else:
+                app.logger.error(f'Email sending failed for: {form_data["email"]}')
+                flash('Registration failed. Please try again.', 'error')
+            
+            return redirect(url_for('register'))
+            
+        except Exception as e:
+            app.logger.error(f"Registration error: {str(e)}")
+            flash('An unexpected error occurred. Please try again.', 'error')
+            return redirect(url_for('register'))
+    
+    return render_template('registration.html', available_events=available_events)
 
 # Webmasters Section ! Do not touch
 
