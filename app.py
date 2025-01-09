@@ -19,8 +19,39 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+        
+        try:
+            # Email configuration
+            msg = MIMEMultipart()
+            msg['From'] = os.environ.get('EMAIL_ID')
+            msg['To'] = os.environ.get('EMAIL_ID')  # or your desired email
+            msg['Subject'] = f"Contact Form Message from {name}"
+            
+            body = f"""
+            Name: {name}
+            Email: {email}
+            Message: {message}
+            """
+            msg.attach(MIMEText(body, 'plain'))
+            
+            # Send email
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+                server.login(os.environ.get('EMAIL_ID'), os.environ.get('APP_PASSWORD'))
+                server.send_message(msg)
+            
+            flash('Message sent successfully!', 'success')
+        except Exception as e:
+            print(f"Error sending email: {e}")
+            flash('Sorry, there was an error sending your message.', 'error')
+            
+        return redirect(url_for('contact'))
+        
     return render_template('contact.html')
 
 
