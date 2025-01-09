@@ -3,6 +3,23 @@
 {% block title %}Team - Saintgits ACM Student Chapter{% endblock %}
 
 {% block content %}
+<style>
+    /* Hide tap instruction on non-touch devices */
+    @media (hover: hover) and (pointer: fine) {
+        .touch-only {
+            display: none;
+        }
+    }
+
+    /* Adjust scale for mobile devices */
+    @media (max-width: 768px) {
+        .group:hover {
+            transform: scale(1.1) !important;
+            z-index: 50;
+        }
+    }
+</style>
+
 <!-- Page Header -->
 <div class="text-center mb-12">
     <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Team</h1>
@@ -11,118 +28,101 @@
     </p>
 </div>
 
-<!-- Faculty Sponsor Section -->
-<div class="mb-16">
-    <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">Faculty Sponsor</h2>
-    <div class="flex justify-center">
-        <div class="w-full max-w-sm bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 text-center">
-                <div class="relative w-32 h-32 mx-auto mb-4">
-                    <img class="w-full h-full rounded-full object-cover" 
-                         src="{{ url_for('static', filename='images/faculty-sponsor.jpg') }}" 
-                         alt="Faculty Sponsor">
+<!-- Team Member Card Macro -->
+{% macro render_member_card(member) %}
+<div class="group relative isolate overflow-visible rounded-lg bg-white dark:bg-dark-secondary shadow-md transform transition-all duration-300 ease-in-out hover:scale-150 md:hover:scale-150 hover:shadow-2xl hover:shadow-blue-500/50 border border-blue-200 dark:border-blue-900">
+    <!-- Normal state -->
+    <div class="relative p-6">
+        <!-- Tap instruction - visible only on touch devices -->
+        <div class="absolute top-2 right-2 text-xs text-blue-500 dark:text-blue-400 opacity-60 md:hidden touch-only">
+            Tap to view details
+        </div>
+        <div class="relative w-32 h-32 mx-auto mb-4">
+            <img class="w-full h-full rounded-full object-cover transition-all duration-300 group-hover:scale-110" 
+                 src="{{ url_for('static', filename='images/' + member.image) }}" 
+                 alt="{{ member.name }}">
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">{{ member.name }}</h3>
+        <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">{{ member.title }}</p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">{{ member.department }}</p>
+    </div>
+    
+    <div class="absolute inset-0 isolate backdrop-blur-md bg-black/30 dark:bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 p-4 flex flex-col justify-between rounded-lg">
+        <div class="flex flex-row h-full backdrop-blur-sm bg-white/10 dark:bg-white/5 rounded-lg p-4">
+            <!-- Left side: Image and basic info -->
+            <div class="w-1/2 flex flex-col items-center justify-start space-y-3 border-r border-white/10 pr-4">
+                <img class="w-20 h-20 rounded-full object-cover border-2 border-white/40" 
+                     src="{{ url_for('static', filename='images/' + member.image) }}" 
+                     alt="{{ member.name }}">
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold text-white mb-0.5 drop-shadow-lg">{{ member.name }}</h3>
+                    <p class="text-blue-300 font-medium text-sm drop-shadow">{{ member.title }}</p>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Er. Gayathri J L</h3>
-                <p class="text-gray-600 dark:text-gray-300 mb-3">Faculty Sponsor</p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">Department of Computer Science and Engineering</p>
+                <!-- LinkedIn/Email button -->
+                <div class="w-full pt-2">
+                    {% if '@' in member.linkedin %}
+                    <a href="mailto:{{ member.linkedin }}" 
+                       class="flex items-center justify-center space-x-2 bg-blue-600/90 hover:bg-blue-700 text-white py-2 px-3 rounded-md transition-colors duration-200 backdrop-blur-sm text-sm">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        <span>Email</span>
+                    </a>
+                    {% else %}
+                    <a href="{{ member.linkedin }}" 
+                       target="_blank" 
+                       class="flex items-center justify-center space-x-2 bg-blue-600/90 hover:bg-blue-700 text-white py-2 px-3 rounded-md transition-colors duration-200 backdrop-blur-sm text-sm">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                        <span>Connect</span>
+                    </a>
+                    {% endif %}
+                </div>
             </div>
+            
+            <!-- Right side: Description -->
+            <div class="w-1/2 pl-4 flex flex-col justify-center">
+                <p class="text-white/90 text-sm leading-relaxed">
+                    {{ member.description }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+<!-- Faculty Sponsor Section -->
+<div class="mb-16 relative">
+    <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8 scroll-fade">Faculty Sponsor</h2>
+    <div class="flex justify-center scroll-fade delay-100">
+        <div class="relative z-0 hover:z-50">
+            {{ render_member_card(team_data.faculty_sponsor) }}
         </div>
     </div>
 </div>
 
 <!-- Executive Committee -->
-<div class="mb-16">
-    <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">Executive Committee</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Chairperson -->
-        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 text-center">
-                <div class="relative w-32 h-32 mx-auto mb-4">
-                    <img class="w-full h-full rounded-full object-cover" 
-                         src="{{ url_for('static', filename='images/DiyaNair.jpg') }}" 
-                         alt="Chairperson">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Diya Nair</h3>
-                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Chairperson</p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
+<div class="mb-16 relative">
+    <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8 scroll-fade">Executive Committee</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative [perspective:1000px]">
+        {% for member in team_data.executive_committee %}
+            <div class="scroll-fade delay-{{ loop.index0 * 100 }} relative z-0 hover:z-50">
+                {{ render_member_card(member) }}
             </div>
-        </div>
-
-        <!-- Vice Chairperson -->
-        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 text-center">
-                <div class="relative w-32 h-32 mx-auto mb-4">
-                    <img class="w-full h-full rounded-full object-cover" 
-                         src="{{ url_for('static', filename='images/AbinR.jpg') }}" 
-                         alt="Vice Chairperson">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Abin Roy</h3>
-                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Vice Chairperson</p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
-            </div>
-        </div>
-
-        <!-- Treasurer -->
-        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 text-center">
-                <div class="relative w-32 h-32 mx-auto mb-4">
-                    <img class="w-full h-full rounded-full object-cover" 
-                         src="{{ url_for('static', filename='images/NandanaA.jpg') }}" 
-                         alt="Treasurer">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Nandana A</h3>
-                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Treasurer</p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 
-<!-- Department Heads -->
-<div class="mb-16">
+<!-- Core Team Heads -->
+<div class="mb-16 relative">
     <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">Core Team Heads</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Operations Head -->
-        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 text-center">
-                <div class="relative w-32 h-32 mx-auto mb-4">
-                    <img class="w-full h-full rounded-full object-cover" 
-                         src="{{ url_for('static', filename='images/AdithyaA.jpg') }}" 
-                         alt="Operations Head">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Adithya Arun</h3>
-                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Operations Head</p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation relative [perspective:1000px]">
+        {% for member in team_data.core_team %}
+            <div class="relative z-0 hover:z-50">
+                {{ render_member_card(member) }}
             </div>
-        </div>
-
-        <!-- Marketing Head -->
-        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 text-center">
-                <div class="relative w-32 h-32 mx-auto mb-4">
-                    <img class="w-full h-full rounded-full object-cover" 
-                         src="{{ url_for('static', filename='images/GayathriSree.jpg') }}" 
-                         alt="Marketing Head">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Gayathri Sreekumar</h3>
-                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Marketing Head</p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
-            </div>
-        </div>
-
-        <!-- Media Head -->
-        <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 text-center">
-                <div class="relative w-32 h-32 mx-auto mb-4">
-                    <img class="w-full h-full rounded-full object-cover" 
-                         src="{{ url_for('static', filename='images/JeevanJ.jpg') }}" 
-                         alt="Media Head - Actual Name">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Jeevan Jigi</h3>
-                <p class="text-blue-600 dark:text-blue-400 font-medium mb-2">Media Head</p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">CSE 2022-2026</p>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
