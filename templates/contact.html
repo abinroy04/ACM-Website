@@ -12,10 +12,27 @@
 </div>
 
 <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="fixed top-4 right-4 px-6 py-3 rounded-lg text-white transition-all duration-500 animate-fade-out
+                    {% if category == 'success' %}
+                        bg-green-500
+                    {% else %}
+                        bg-red-500
+                    {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <!-- Contact Form -->
     <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md p-8">
         <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Send us a Message</h2>
-        <form action="#" method="POST" class="space-y-6">
+        <form method="POST" action="{{ url_for('contact') }}" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
@@ -135,4 +152,16 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const flashMessages = document.querySelectorAll('.animate-fade-out');
+        flashMessages.forEach(message => {
+            setTimeout(() => {
+                message.style.opacity = '0';
+                setTimeout(() => message.remove(), 500);
+            }, 3000);
+        });
+    });
+</script>
 {% endblock %}
