@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery - Saintgits ACM Student Chapter{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Event Gallery</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-300">Highlights from our past events and activities</p>
+    </div>
+
+    {% if not event_data %}
+        <!-- View Switcher -->
+        <div class="flex justify-end mb-6">
+            <a href="{{ url_for('gallery', view='all') }}" 
+               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+                <span>View All Photos</span>
+            </a>
+        </div>
+    {% endif %}
+
+    {% if event_data %}
+        <!-- Single Event Gallery View -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ event_data.title }}</h2>
+                    <p class="text-gray-600 dark:text-gray-400">{{ event_data.date }}</p>
+                </div>
+                <a href="{{ url_for('gallery') }}" 
+                   class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 inline-flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Back to Events</span>
+                </a>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 mb-8">{{ event_data.description }}</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-animation">
+                {% for image in event_data.images %}
+                <div class="relative group scroll-fade delay-{{ loop.index0 * 100 if loop.index0 < 6 else 500 }}">
+                    <img src="{{ url_for('static', filename=image.src) }}" 
+                         alt="Gallery Image"
+                         class="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105">
+                    <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <a href="{{ url_for('static', filename=image.src) }}" 
+                           download
+                           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Download</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% elif view == 'all' %}
+        <!-- All Photos Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 stagger-animation">
+            {% for event_id, event in gallery_data.items() %}
+                {% for image in event.images %}
+                <div class="relative group">
+                    <img src="{{ url_for('static', filename=image.src) }}" 
+                         alt="Gallery Image"
+                         class="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105">
+                    <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <a href="{{ url_for('static', filename=image.src) }}" 
+                           download
+                           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Download</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- All Events Gallery Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation">
+            {% for event_id, event in gallery_data.items() %}
+            <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
+                <img src="{{ url_for('static', filename=event.images[0].src) }}" 
+                     alt="{{ event.title }}"
+                     class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ event.title }}</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">{{ event.date }}</p>
+                    <a href="{{ url_for('gallery', event=event_id) }}" 
+                       class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">
+                        View Gallery →
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
