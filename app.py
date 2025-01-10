@@ -14,6 +14,14 @@ app.secret_key = os.environ.get('SECRET_KEY')
 
 STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
 
+@app.route('/sitemap.xml')
+def serve_sitemap():
+    return send_from_directory('static', 'sitemap.xml')
+
+@app.route('/robots.txt')
+def serve_robots():
+    return send_from_directory('static', 'robots.txt')
+    
 @app.route('/')
 def home():
     return render_template('home.html')
