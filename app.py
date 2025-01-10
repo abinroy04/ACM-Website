@@ -121,7 +121,7 @@ TEAM_DATA = {
             'name': 'Jeevan Thomas',
             'title': 'Media Head',
             'department': 'CSE 2022-2026',
-            'image': 'JeevanT.jpg',
+            'image': 'JeevanT.png',
             'linkedin': 'https://www.linkedin.com/in/jeevan-thomas-214aa531b/',
             'description': 'Passionate about technology and community building. Developer and open source enthusiast.'
         }
@@ -376,7 +376,7 @@ WEBMASTERS_DATA = [
     {
         'name': 'Jeevan Thomas',
         'department': 'CSE 2022-2026',
-        'image': 'JeevanT.jpg'
+        'image': 'JeevanT.png'
     }
 ]
 
