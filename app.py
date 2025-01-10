@@ -72,7 +72,7 @@ TEAM_DATA = {
         'department': 'Department of Computer Science and Engineering',
         'image': 'faculty-sponsor.jpg',
         'linkedin': 'gayathri.jl@saintgits.org',
-        'description': 'Assistant Professor at Saintgits College of Engineering with expertise in Computer Science and Engineering.'
+        'description': 'Assistant Professor at Saintgits College of Engineering, Department of Computer Science and Engineering with expertise in Computer and Information Science.'
     },
     'executive_committee': [
         {
@@ -164,7 +164,7 @@ def get_events_data():
                 'title': 'Lumino 25',
                 'description': '30-hour coding challenge to solve real-world problems with innovative solutions.',
                 'category': {'name': 'Hackathon', 'color': 'green'},
-                'registration_enabled': 1,
+                'registration_enabled': 0,
                 'registration_fee': 250,
                 'event_id': 'lumino_25'
             }
@@ -174,7 +174,7 @@ def get_events_data():
                 'date': 'October 12, 2024',
                 'title': 'Exploring Power BI',
                 'description': 'Introduction to Power BI, fundamentals and best practices.',
-                'category': {'name': 'Workshop', 'color': 'blue'},
+                'category': {'name': 'Workshop', 'color': 'green'},
                 'gallery_link': 'power-bi'
             },
             {
@@ -188,7 +188,7 @@ def get_events_data():
                 'date': 'May 14, 2024',
                 'title': 'Student Chapter Inauguration',
                 'description': 'Inaguration of the student chapter at Saintgits College of Engineering by the Honourable District Collector of Kottayam Smt. V. Vigneshwari IAS',
-                'category': {'name': 'Events', 'color': 'blue'},
+                'category': {'name': 'Events', 'color': 'white'},
                 'gallery_link': 'inauguration'
             }
         ]
@@ -355,7 +355,7 @@ def register():
             
         except Exception as e:
             app.logger.error(f"Registration error: {str(e)}")
-            flash('An unexpected error occurred. Please try again.', 'error')
+            flash('An unexpected error occurred. Please try again or reach out via mail.', 'error')
             return redirect(url_for('register'))
     
     return render_template('registration.html', available_events=available_events)
