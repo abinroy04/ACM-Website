@@ -11,55 +11,57 @@
 </div>
 
 <!-- Events Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation" id="events-grid">
-    {% for event in events_data.upcoming %}
-    <div class="event-card bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow" data-category="{{ event.category.name.lower() }}">
-        <img src="{{ url_for('static', filename='images/' + event.image) }}" alt="{{ event.title }}" class="w-full h-48 object-cover">
-        <div class="p-6">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-sm text-{{ event.status.color }}-600 dark:text-{{ event.status.color }}-400 font-semibold">{{ event.status.text }}</span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{ event.date }}</span>
-            </div>
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ event.title }}</h3>
-            <p class="text-gray-600 dark:text-gray-300 mb-4">{{ event.description }}</p>
-            <div class="flex items-center justify-between">
-                <span class="text-sm bg-{{ event.category.color }}-100 dark:bg-{{ event.category.color }}-200 text-{{ event.category.color }}-600 dark:text-{{ event.category.color }}-400 px-3 py-1 rounded-full">{{ event.category.name }}</span>
-                {% if event.registration_enabled %}
-                <a href="{{ url_for('register') }}" 
-                    class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">
-                    Register Now →
-                </a>
-                {% else %}
-                <span class="text-gray-400 dark:text-gray-500 font-medium">Registration Will Open Soon</span>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-
-<!-- Past Events Section -->
-<div class="mt-16">
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Past Events</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation">
-        {% for event in events_data.past %}
-        <div class="event-card bg-gray-50 dark:bg-dark-secondary rounded-lg overflow-hidden hover:bg-gray-100 dark:hover:bg-dark-primary transition-colors" data-category="{{ event.category.name.lower() }}">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation" id="events-grid">
+        {% for event in events_data.upcoming %}
+        <div class="event-card bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow" data-category="{{ event.category.name.lower() }}">
+            <img src="{{ url_for('static', filename='images/' + event.image) }}" alt="{{ event.title }}" class="w-full h-48 object-cover">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
+                    <span class="text-sm text-{{ event.status.color }}-600 dark:text-{{ event.status.color }}-400 font-semibold">{{ event.status.text }}</span>
                     <span class="text-sm text-gray-500 dark:text-gray-400">{{ event.date }}</span>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ event.title }}</h3>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ event.title }}</h3>
                 <p class="text-gray-600 dark:text-gray-300 mb-4">{{ event.description }}</p>
                 <div class="flex items-center justify-between">
                     <span class="text-sm bg-{{ event.category.color }}-100 dark:bg-{{ event.category.color }}-200 text-{{ event.category.color }}-600 dark:text-{{ event.category.color }}-400 px-3 py-1 rounded-full">{{ event.category.name }}</span>
-                    <a href="{{ url_for('gallery', event=event.gallery_link) }}" 
+                    {% if event.registration_enabled %}
+                    <a href="{{ url_for('register') }}" 
                         class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">
-                        View Highlights →
+                        Register Now →
                     </a>
+                    {% else %}
+                    <span class="text-gray-400 dark:text-gray-500 font-medium">Registration Will Open Soon</span>
+                    {% endif %}
                 </div>
             </div>
         </div>
         {% endfor %}
+    </div>
+
+    <!-- Past Events Section -->
+    <div class="mt-16">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Past Events</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation">
+            {% for event in events_data.past %}
+            <div class="event-card bg-gray-50 dark:bg-dark-secondary rounded-lg overflow-hidden hover:bg-gray-100 dark:hover:bg-dark-primary transition-colors" data-category="{{ event.category.name.lower() }}">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm text-gray-500 dark:text-gray-400">{{ event.date }}</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ event.title }}</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">{{ event.description }}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm bg-{{ event.category.color }}-100 dark:bg-{{ event.category.color }}-200 text-{{ event.category.color }}-600 dark:text-{{ event.category.color }}-400 px-3 py-1 rounded-full">{{ event.category.name }}</span>
+                        <a href="{{ url_for('gallery', event=event.gallery_link) }}" 
+                            class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">
+                            View Highlights →
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
