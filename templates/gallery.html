@@ -13,12 +13,12 @@
     {% if not event_data %}
         <!-- View Switcher -->
         <div class="flex justify-end mb-6">
-            <a href="{{ url_for('gallery', view='all') }}" 
+            <a href="{{ url_for('events') }}" 
                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z"/>
                 </svg>
-                <span>View All Photos</span>
+                <span>View All Events</span>
             </a>
         </div>
     {% endif %}
@@ -64,23 +64,31 @@
         </div>
 
         <!-- Image Modal -->
-        <div id="imageModal" class="fixed inset-0 z-50 hidden">
-            <div class="absolute inset-0 bg-black bg-opacity-75" onclick="closeModal()"></div>
-            <div class="absolute top-4 right-4 z-50">
-                <button onclick="closeModal()" class="text-white hover:text-gray-300 mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div id="imageModal" class="fixed inset-0 z-50 hidden scrollbar-hide overflow-y-auto">
+            <!-- Changed background opacity and moved it behind the image -->
+            <div class="absolute inset-0 bg-black bg-opacity-75"></div>
+            
+            <!-- Scrollable Image Container -->
+            <div class="min-h-screen w-full flex items-center justify-center p-4 relative z-10">
+                <img id="modalImage" src="" alt="Modal Image" 
+                     class="max-w-[95vw] max-h-[90vh] object-contain rounded-lg">
+            </div>
+
+            <!-- Fixed Controls Container -->
+            <div class="fixed top-4 right-4 z-20 flex items-center space-x-4">
+                <button onclick="closeModal()" 
+                        class="bg-black/20 hover:bg-black/40 text-white p-2 rounded-lg transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-                <a id="modalDownload" href="#" download class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg inline-flex items-center">
+                <a id="modalDownload" href="#" download 
+                   class="bg-blue-600/80 hover:bg-blue-700/90 text-white px-4 py-2 rounded-lg shadow-lg inline-flex items-center transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
                     </svg>
                     Download
                 </a>
-            </div>
-            <div class="fixed inset-0 flex items-center justify-center p-4">
-                <img id="modalImage" src="" alt="Modal Image" class="max-h-[90vh] max-w-[90vw] object-contain rounded-lg">
             </div>
         </div>
 
@@ -93,13 +101,20 @@
                 modal.classList.remove('hidden');
                 modalImg.src = imageSrc;
                 downloadBtn.href = imageSrc;
-                document.body.style.overflow = 'hidden';
+                document.body.classList.add('overflow-hidden');
+
+                // Add event listener for image load
+                modalImg.onload = function() {
+                    if (this.naturalHeight > window.innerHeight) {
+                        document.body.classList.remove('overflow-hidden');
+                    }
+                };
             }
 
             function closeModal() {
                 const modal = document.getElementById('imageModal');
                 modal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
+                document.body.classList.remove('overflow-hidden');
             }
 
             // Close modal on escape key press
@@ -117,7 +132,8 @@
                 <div class="relative group">
                     <img src="{{ url_for('static', filename=image.src) }}" 
                          alt="Gallery Image"
-                         class="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105">
+                         onclick="openModal(`{{ url_for('static', filename=image.src) }}`)"
+                         class="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105 cursor-pointer">
                     <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <a href="{{ url_for('static', filename=image.src) }}" 
                            download
@@ -132,6 +148,74 @@
                 {% endfor %}
             {% endfor %}
         </div>
+
+        <!-- Image Modal -->
+        <div id="imageModal" class="fixed inset-0 z-20 hidden scrollbar-hide overflow-y-auto">
+            <!-- Changed background opacity -->
+            <div class="absolute inset-0 bg-black bg-opacity-75" onclick="closeModal()"></div>
+            
+            <!-- Scrollable Image Container -->
+            <div class="min-h-screen w-full flex items-center justify-center p-4">
+                <img id="modalImage" src="" alt="Modal Image" 
+                     class="max-w-[95vw] max-h-[90vh] object-contain rounded-lg">
+            </div>
+
+            <!-- Fixed Controls Container -->
+            <div class="fixed top-4 right-4 z-50 flex items-center space-x-4">
+                <button onclick="closeModal()" 
+                        class="bg-black/20 hover:bg-black/40 text-white p-2 rounded-lg transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <a id="modalDownload" href="#" download 
+                   class="bg-blue-600/80 hover:bg-blue-700/90 text-white px-4 py-2 rounded-lg shadow-lg inline-flex items-center transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                    Download
+                </a>
+            </div>
+
+            <!-- Scrollable Image Container -->
+            <div class="min-h-screen w-full flex items-center justify-center p-4">
+                <img id="modalImage" src="" alt="Modal Image" 
+                     class="max-w-[95vw] max-h-[90vh] object-contain rounded-lg">
+            </div>
+        </div>
+
+        <script>
+            function openModal(imageSrc) {
+                const modal = document.getElementById('imageModal');
+                const modalImg = document.getElementById('modalImage');
+                const downloadBtn = document.getElementById('modalDownload');
+                
+                modal.classList.remove('hidden');
+                modalImg.src = imageSrc;
+                downloadBtn.href = imageSrc;
+                document.body.classList.add('overflow-hidden');
+
+                // Add event listener for image load
+                modalImg.onload = function() {
+                    if (this.naturalHeight > window.innerHeight) {
+                        document.body.classList.remove('overflow-hidden');
+                    }
+                };
+            }
+
+            function closeModal() {
+                const modal = document.getElementById('imageModal');
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            // Close modal on escape key press
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        </script>
     {% else %}
         <!-- All Events Gallery Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation">
@@ -153,4 +237,15 @@
         </div>
     {% endif %}
 </div>
+
+<style>
+    /* Hide scrollbar but keep functionality */
+    .scrollbar-hide {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;     /* Firefox */
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;            /* Chrome, Safari and Opera */
+    }
+</style>
 {% endblock %}
