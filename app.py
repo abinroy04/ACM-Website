@@ -167,7 +167,7 @@ def get_events_data():
                 'title': 'Lumino 25',
                 'description': '30-hour coding challenge to solve real-world problems with innovative solutions.',
                 'category': {'name': 'Hackathon', 'color': 'green'},
-                'registration_enabled': 1,
+                'registration_enabled': 0,
                 'registration_fee': 250,
                 'event_id': 'lumino_25'
             }
