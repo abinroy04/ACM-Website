@@ -18,6 +18,14 @@
             z-index: 50;
         }
     }
+
+    /* Ensure description text stays inside the box on medium screens */
+    @media (min-width: 768px) {
+        .description-box {
+            max-height: 100%;
+            overflow: hidden;
+        }
+    }
 </style>
 
 <!-- Page Header -->
@@ -64,7 +72,7 @@
                     <a href="mailto:{{ member.linkedin }}" 
                        class="flex items-center justify-center space-x-2 bg-blue-600/90 hover:bg-blue-700 text-white py-2 px-3 rounded-md transition-colors duration-200 backdrop-blur-sm text-sm">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6l-8 5-8-5V6l8 5 8-5v2z"/>
                         </svg>
                         <span>Email</span>
                     </a>
@@ -82,7 +90,7 @@
             </div>
             
             <!-- Right side: Description -->
-            <div class="w-1/2 pl-4 flex flex-col justify-center">
+            <div class="w-1/2 pl-4 flex flex-col justify-center description-box">
                 <p class="text-white/90 text-sm leading-relaxed">
                     {{ member.description }}
                 </p>
@@ -93,19 +101,19 @@
 {% endmacro %}
 
 <!-- Faculty Sponsor Section -->
-<div class="mb-16 relative">
+<div class="mb-16 relative px-4">
     <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8 scroll-fade">Faculty Sponsor</h2>
     <div class="flex justify-center scroll-fade delay-100">
-        <div class="relative z-0 hover:z-50">
+        <div class="relative z-0 hover:z-50 w-full max-w-md mx-auto">
             {{ render_member_card(team_data.faculty_sponsor) }}
         </div>
     </div>
 </div>
 
 <!-- Executive Committee -->
-<div class="mb-16 relative">
+<div class="mb-16 relative px-4">
     <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8 scroll-fade">Executive Committee</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative [perspective:1000px]">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative max-w-7xl mx-auto">
         {% for member in team_data.executive_committee %}
             <div class="scroll-fade delay-{{ loop.index0 * 100 }} relative z-0 hover:z-50">
                 {{ render_member_card(member) }}
@@ -115,9 +123,9 @@
 </div>
 
 <!-- Core Team Heads -->
-<div class="mb-16 relative">
+<div class="mb-16 relative px-4">
     <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">Core Team Heads</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation relative [perspective:1000px]">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-animation relative max-w-7xl mx-auto">
         {% for member in team_data.core_team %}
             <div class="relative z-0 hover:z-50">
                 {{ render_member_card(member) }}
