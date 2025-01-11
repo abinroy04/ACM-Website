@@ -1,11 +1,12 @@
 import os
-from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, session
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 from dotenv import load_dotenv
 from glob import glob
+from functools import wraps
 
 load_dotenv()
 
@@ -21,7 +22,7 @@ def serve_sitemap():
 @app.route('/robots.txt')
 def serve_robots():
     return send_from_directory('static', 'robots.txt')
-    
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -32,6 +33,7 @@ def contact():
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
+        subject = request.form.get('subject')
         message = request.form.get('message')
         
         try:
@@ -44,6 +46,7 @@ def contact():
             body = f"""
             Name: {name}
             Email: {email}
+            Subject: {subject}
             Message: {message}
             """
             msg.attach(MIMEText(body, 'plain'))
@@ -89,7 +92,7 @@ TEAM_DATA = {
             'department': 'CSE 2022-2026',
             'image': 'AbinR.jpg',
             'linkedin': 'https://www.linkedin.com/in/abin-roy-750783293/',
-            'description': 'Passionate about technology and community building. Bringing technical expertise and strategic planning to empower innovation and collaboration.'
+            'description': 'Enthusiastic about technology and creating communities. Using technical skills and strategic planning to support innovation and teamwork.'
         },
         {
             'name': 'Nandana A',
@@ -123,7 +126,7 @@ TEAM_DATA = {
             'department': 'CSE 2022-2026',
             'image': 'JeevanT.png',
             'linkedin': 'https://www.linkedin.com/in/jeevan-thomas-214aa531b/',
-            'description': 'Passionate about technology and community building. Developer and open source enthusiast.'
+            'description': 'Passionate about technology and team building, photographer and videographer , mixer and editor . A technically profound personal.'
         }
     ]
 }
@@ -164,7 +167,7 @@ def get_events_data():
                 'title': 'Lumino 25',
                 'description': '30-hour coding challenge to solve real-world problems with innovative solutions.',
                 'category': {'name': 'Hackathon', 'color': 'green'},
-                'registration_enabled': 0,
+                'registration_enabled': 1,
                 'registration_fee': 250,
                 'event_id': 'lumino_25'
             }
@@ -364,8 +367,8 @@ def register():
 
 WEBMASTERS_DATA = [
     {
-        'name': 'Abin Roy',
-        'department': 'CSE 2022-2026',
+        'name': 'Abin Roy', # Webmasters Section ! Do not touch
+        'department': 'CSE 2022-2026', # Webmasters Section ! Do not touch
         'image': 'AbinR.jpg'
     },
     {
@@ -380,7 +383,7 @@ WEBMASTERS_DATA = [
     }
 ]
 
-@app.route('/webmasters')
+@app.route('/webmasters') # Webmasters Section ! Do not touch
 def webmasters():
     return render_template('webmasters.html', webmasters=WEBMASTERS_DATA)
 
