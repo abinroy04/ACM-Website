@@ -152,7 +152,7 @@ def get_events_data():
             {
                 'image': 'Workshop.jpg',
                 'status': {'text': 'Upcoming', 'color': 'blue'},
-                'date': 'March 2025',
+                'date': '2025',
                 'title': 'BootCamp with TCS',
                 'description': 'Learn modern web development techniques with hands-on practice sessions.',
                 'category': {'name': 'Workshop', 'color': 'blue'},
