@@ -151,7 +151,7 @@ def get_events_data():
         'upcoming': [
             {
                 'image': 'Workshop.jpg',
-                'status': {'text': 'Upcoming', 'color': 'blue'},
+                'status': {'text': 'Upcoming', 'color': 'blue'},#Change to green for registration open
                 'date': 'March 2025',
                 'title': 'BootCamp with TCS',
                 'description': 'Learn modern web development techniques with hands-on practice sessions.',
@@ -162,7 +162,7 @@ def get_events_data():
             },
             {
                 'image': 'hackathon.png',
-                'status': {'text': 'Upcoming', 'color': 'green'},
+                'status': {'text': 'Upcoming', 'color': 'blue'}, #Change to green for registration open
                 'date': 'March, 2025',
                 'title': 'Lumino 25',
                 'description': '30-hour coding challenge to solve real-world problems with innovative solutions.',
