@@ -110,7 +110,7 @@ TEAM_DATA = {
             'department': 'CSE 2022-2026',
             'image': 'AdithyaA.jpg',
             'linkedin': 'https://www.linkedin.com/in/adithya-arun-806704322/',
-            'description': 'A strategic thinker with a passion for seamless execution. Committed to driving operational excellence and fostering a culture of productivity and teamwork.'
+            'description': 'A strategic thinker with a passion for seamless execution. Committed to driving operational excellence and fostering a culture of and teamwork.'
         },
         {
             'name': 'Gayathri Sreekumar',
@@ -152,7 +152,7 @@ def get_events_data():
             {
                 'image': 'Workshop.jpg',
                 'status': {'text': 'Upcoming', 'color': 'blue'},
-                'date': '2025',
+                'date': 'March 2025',
                 'title': 'BootCamp with TCS',
                 'description': 'Learn modern web development techniques with hands-on practice sessions.',
                 'category': {'name': 'Workshop', 'color': 'blue'},
@@ -162,12 +162,12 @@ def get_events_data():
             },
             {
                 'image': 'hackathon.png',
-                'status': {'text': 'Registration Open', 'color': 'green'},
+                'status': {'text': 'Upcoming', 'color': 'green'},
                 'date': 'March, 2025',
                 'title': 'Lumino 25',
                 'description': '30-hour coding challenge to solve real-world problems with innovative solutions.',
                 'category': {'name': 'Hackathon', 'color': 'green'},
-                'registration_enabled': 0,
+                'registration_enabled': 1,
                 'registration_fee': 250,
                 'event_id': 'lumino_25'
             }
@@ -367,8 +367,8 @@ def register():
 
 WEBMASTERS_DATA = [
     {
-        'name': 'Abin Roy', # Webmasters Section ! Do not touch
-        'department': 'CSE 2022-2026', # Webmasters Section ! Do not touch
+        'name': 'Abin Roy',
+        'department': 'CSE 2022-2026',
         'image': 'AbinR.jpg'
     },
     {
@@ -383,7 +383,7 @@ WEBMASTERS_DATA = [
     }
 ]
 
-@app.route('/webmasters') # Webmasters Section ! Do not touch
+@app.route('/webmasters')
 def webmasters():
     return render_template('webmasters.html', webmasters=WEBMASTERS_DATA)
 
