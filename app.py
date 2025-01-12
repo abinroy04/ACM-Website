@@ -1,391 +1,424 @@
-import os
-from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, session
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.image import MIMEImage
-from dotenv import load_dotenv
-from glob import glob
-from functools import wraps
-
-load_dotenv()
-
-app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY')
-
-STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
-
-@app.route('/sitemap.xml')
-def serve_sitemap():
-    return send_from_directory('static', 'sitemap.xml')
-
-@app.route('/robots.txt')
-def serve_robots():
-    return send_from_directory('static', 'robots.txt')
-
-@app.route('/')
-def home():
-    return render_template('home.html')
-
-
-@app.route('/contact', methods=['GET', 'POST'])
-def contact():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        subject = request.form.get('subject')
-        message = request.form.get('message')
-        
-        try:
-            # Email configuration
-            msg = MIMEMultipart()
-            msg['From'] = os.environ.get('EMAIL_ID')
-            msg['To'] = os.environ.get('EMAIL_ID')  # or your desired email
-            msg['Subject'] = f"Contact Form Message from {name}"
-            
-            body = f"""
-            Name: {name}
-            Email: {email}
-            Subject: {subject}
-            Message: {message}
-            """
-            msg.attach(MIMEText(body, 'plain'))
-            
-            # Send email
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-                server.login(os.environ.get('EMAIL_ID'), os.environ.get('APP_PASSWORD'))
-                server.send_message(msg)
-            
-            flash('Message sent successfully!', 'success')
-        except Exception as e:
-            print(f"Error sending email: {e}")
-            flash('Sorry, there was an error sending your message.', 'error')
-            
-        return redirect(url_for('contact'))
-        
-    return render_template('contact.html')
-
-
-
-# Team Section
-TEAM_DATA = {
-    'faculty_sponsor': {
-        'name': 'Er. Gayathri J L',
-        'title': 'Faculty Sponsor',
-        'department': 'Department of Computer Science and Engineering',
-        'image': 'faculty-sponsor.jpg',
-        'linkedin': 'gayathri.jl@saintgits.org',
-        'description': 'Assistant Professor at Saintgits College of Engineering, Department of Computer Science and Engineering with expertise in Computer and Information Science.'
-    },
-    'executive_committee': [
-        {
-            'name': 'Diya Nair',
-            'title': 'Chairperson',
-            'department': 'CSE 2022-2026',
-            'image': 'DiyaNair.jpg',
-            'linkedin': 'https://www.linkedin.com/in/diya-nair-83a12a323/',
-            'description': 'Leading the ACM Student Chapter with a focus on fostering technical growth and community engagement.'
-        },
-        {
-            'name': 'Abin Roy',
-            'title': 'Vice Chairperson',
-            'department': 'CSE 2022-2026',
-            'image': 'AbinR.jpg',
-            'linkedin': 'https://www.linkedin.com/in/abin-roy-750783293/',
-            'description': 'Enthusiastic about technology and creating communities. Using technical skills and strategic planning to support innovation and teamwork.'
-        },
-        {
-            'name': 'Nandana A',
-            'title': 'Treasurer',
-            'department': 'CSE 2022-2026',
-            'image': 'NandanaA.jpg',
-            'linkedin': 'https://www.linkedin.com/in/nandana-a-481a18263/',
-            'description': 'Dedicated to efficient resource management and encouraging innovation through impactful technical events.'
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === null ? true : localStorage.getItem('darkMode') === 'true' }" 
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
+      :class="{ 'dark': darkMode }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon-acm.ico') }}">
+    <title>{% block title %}Saintgits ACM Student Chapter{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            DEFAULT: '#1a1a1a',
+                            secondary: '#242424'
+                        }
+                    }
+                }
+            }
         }
-    ],
-    'core_team': [
-        {
-            'name': 'Adithya Arun',
-            'title': 'Operations Head',
-            'department': 'CSE 2022-2026',
-            'image': 'AdithyaA.jpg',
-            'linkedin': 'https://www.linkedin.com/in/adithya-arun-806704322/',
-            'description': 'A strategic thinker with a passion for seamless execution. Committed to driving operational excellence and fostering a culture of and teamwork.'
-        },
-        {
-            'name': 'Gayathri Sreekumar',
-            'title': 'Marketing Head',
-            'department': 'CSE 2022-2026',
-            'image': 'GayathriSree.jpg',
-            'linkedin': 'https://www.linkedin.com/in/gayathri-sreekumar-95525231b/',
-            'description': 'A creative strategist with a flair for innovation and narrative crafting. Driven to bridge ideas and people through impactful campaigns.'
-        },
-        {
-            'name': 'Jeevan Thomas',
-            'title': 'Media Head',
-            'department': 'CSE 2022-2026',
-            'image': 'JeevanT.png',
-            'linkedin': 'https://www.linkedin.com/in/jeevan-thomas-214aa531b/',
-            'description': 'Passionate about technology and team building, photographer and videographer , mixer and editor . A technically profound personal.'
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @keyframes fadeSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-    ]
-}
+        
+        .page-content {
+            animation: fadeSlideIn 0.6s ease-out forwards;
+        }
 
+        .stagger-animation > * {
+            opacity: 0;
+            animation: fadeSlideIn 0.5s ease-out forwards;
+        }
 
-@app.route('/team')
-def team():
-    return render_template('team.html', team_data=TEAM_DATA)
+        /* Static stagger delays */
+        .stagger-animation > *:nth-child(1) { animation-delay: 0s; }
+        .stagger-animation > *:nth-child(6) { animation-delay: 0.5s; }
+        .stagger-animation > *:nth-child(11) { animation-delay: 1s; }
+        .stagger-animation > *:nth-child(16) { animation-delay: 1.5s; }
+        .stagger-animation > *:nth-child(20) { animation-delay: 1.9s; }
 
+        .scroll-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
 
+        .scroll-fade.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-# Events Section
+        /* Delay variants for groups */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-400 { transition-delay: 0.4s; }
+        .delay-500 { transition-delay: 0.5s; }
 
-@app.route('/events')
-def events():
-    events_data = get_events_data()
-    return render_template('events.html', events_data=events_data)
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+            visibility: visible;
+            transition: opacity 0.3s ease;
+        }
 
+        .dark #particles-js {
+            opacity: 0.6;
+        }
 
-def get_events_data():
-    return {
-        'upcoming': [
-            {
-                'image': 'Workshop.jpg',
-                'status': {'text': 'Upcoming', 'color': 'blue'},#Change to green for registration open
-                'date': 'March 2025',
-                'title': 'BootCamp with TCS',
-                'description': 'Learn modern web development techniques with hands-on practice sessions.',
-                'category': {'name': 'Workshop', 'color': 'blue'},
-                'registration_enabled': 0,
-                'registration_fee': 100,
-                'event_id': 'bootcamp_tcs'
+        /* Ensure content appears above particles */
+        header, main, footer {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50 dark:bg-dark dark:text-gray-100">
+    <div id="particles-js"></div>
+    <!-- Navigation -->
+    <header class="bg-white dark:bg-dark-secondary shadow-md">
+        <nav class="max-w-7xl mx-auto pl-0 pr-2 sm:pl-1 sm:pr-4 lg:pl-2 lg:pr-6" x-data="{ isOpen: false }">
+            <div class="flex justify-between h-24">
+                <div class="flex items-center pl-1">
+                    <a href="{{ url_for('home') }}" class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" 
+                             alt="Logo" 
+                             class="h-20 w-auto">
+                    </a>
+                </div>
+
+                <!-- Dark mode toggle and Navigation -->
+                <div class="flex items-center space-x-4">
+                    <button @click="darkMode = !darkMode" 
+                            class="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <svg x-show="!darkMode" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                        </svg> 
+                        <svg x-show="darkMode" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                        </svg>
+                    </button>
+
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex md:items-center md:space-x-8">
+                        <a href="{{ url_for('home') }}" 
+                           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium"> <!-- Changed from text-sm to text-base -->
+                            Home
+                        </a>
+                        <a href="{{ url_for('events') }}" 
+                           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium">
+                            Events
+                        </a>
+                        <a href="{{ url_for('team') }}" 
+                           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium">
+                            Our Team
+                        </a>
+                        <a href="{{ url_for('gallery') }}" 
+                           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium">
+                            Gallery
+                        </a>
+                        <a href="{{ url_for('contact') }}" 
+                           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button @click="isOpen = !isOpen" 
+                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-gray-900 hover:bg-gray-100 focus:outline-none">
+                        <svg class="h-6 w-6" x-show="!isOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                        <svg class="h-6 w-6" x-show="isOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div x-show="isOpen" class="md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="{{ url_for('home') }}" 
+                       class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium">
+                        Home
+                    </a>
+                    <a href="{{ url_for('events') }}" 
+                       class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium">
+                        Events
+                    </a>
+                    <a href="{{ url_for('team') }}" 
+                       class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium">
+                        Our Team
+                    </a>
+                    <a href="{{ url_for('gallery') }}" 
+                       class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium">
+                        Gallery
+                    </a>
+                    <a href="{{ url_for('contact') }}" 
+                       class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium">
+                        Contact Us
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="page-content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-dark-secondary shadow-inner">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Contact Info -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Contact Us</h3>
+                    <div class="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        <span>+91 70250 05558</span>
+                        <span>+91 83300 17090</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <a href="mailto:acm@saintgits.org" class="hover:text-blue-600 dark:hover:text-blue-400">acm@saintgits.org</a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Quick Links</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        
+                        <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                            <li><a href="{{ url_for('events') }}" class="hover:text-blue-600 dark:hover:text-blue-400">Events</a></li>
+                            <li><a href="{{ url_for('gallery') }}" class="hover:text-blue-600 dark:hover:text-blue-400">Gallery</a></li>
+                            <li><a href="{{ url_for('contact') }}" class="hover:text-blue-600 dark:hover:text-blue-400">Contact</a></li>
+                        </ul>
+                        
+                        <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                            <li><a href="{{ url_for('team') }}" class="hover:text-blue-600 dark:hover:text-blue-400">Our Team</a></li>
+                            <li><a href="{{ url_for('webmasters') }}" class="hover:text-blue-600 dark:hover:text-blue-400">Webmasters</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="https://www.linkedin.com/company/saintgits-acm-student-chapter" target="_blank" rel="noopener noreferrer" 
+                           class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/acm.saintgits" target="_blank" rel="noopener noreferrer"
+                           class="text-gray-600 dark:text-gray-400 hover:text-pink-600 dark:hover:text-pink-400">
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+                <p class="text-center text-gray-600 dark:text-gray-400 text-sm">
+                    &copy; 2025 Saintgits ACM Student Chapter. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Stop observing after animation
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all elements with scroll-fade class
+            document.querySelectorAll('.scroll-fade').forEach(element => {
+                observer.observe(element);
+            });
+        });
+
+        const lightParticleConfig = {
+            // Configuration for light theme
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: "#314259" }, // Gray color for light theme
+                shape: { type: "circle" },
+                opacity: { value: 0.3, random: false },
+                size: { value: 3, random: true },
+                line_linked: { enable: false },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
             },
-            {
-                'image': 'hackathon.png',
-                'status': {'text': 'Upcoming', 'color': 'blue'}, #Change to green for registration open
-                'date': 'March, 2025',
-                'title': 'Lumino 25',
-                'description': '30-hour coding challenge to solve real-world problems with innovative solutions.',
-                'category': {'name': 'Hackathon', 'color': 'green'},
-                'registration_enabled': 1,
-                'registration_fee': 250,
-                'event_id': 'lumino_25'
-            }
-        ],
-        'past': [
-            {
-                'date': 'October 12, 2024',
-                'title': 'Exploring Power BI',
-                'description': 'Introduction to Power BI, fundamentals and best practices.',
-                'category': {'name': 'Workshop', 'color': 'green'},
-                'gallery_link': 'power-bi'
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "bubble" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    bubble: {
+                        distance: 150,
+                        size: 6,
+                        duration: 0.3,
+                        opacity: 0.6,
+                        speed: 3
+                    },
+                    push: { particles_nb: 4 }
+                }
             },
-            {
-                'date': 'Oct 8, 2024',
-                'title': 'Crack the Code: Strategies to Dominate a hackathon',
-                'description': 'Equip students with strategies, insights, and real-world tips on how to approach hackathons, solve problems effectively, and showcase your skills like a pro!',
-                'category': {'name': 'Webinar', 'color': 'blue'},
-                'gallery_link': 'crack-the-code'
+            retina_detect: true
+        };
+
+        const darkParticleConfig = {
+            // Configuration for dark theme
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: "#6366f1" }, // Indigo color for dark theme
+                shape: { type: "circle" },
+                opacity: { value: 0.6, random: false },
+                size: { value: 3, random: true },
+                line_linked: { enable: false },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: true
+                }
             },
-            {
-                'date': 'May 14, 2024',
-                'title': 'Student Chapter Inauguration',
-                'description': 'Inaguration of the student chapter at Saintgits College of Engineering by the Honourable District Collector of Kottayam Smt. V. Vigneshwari IAS',
-                'category': {'name': 'Events', 'color': 'white'},
-                'gallery_link': 'inauguration'
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "bubble" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    bubble: {
+                        distance: 150,
+                        size: 6,
+                        duration: 0.3,
+                        opacity: 0.8,
+                        speed: 3
+                    },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        };
+
+        function initParticles() {
+            const particlesElement = document.getElementById('particles-js');
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            
+            // Clean up existing particles
+            if (window.pJSDom && window.pJSDom.length) {
+                window.pJSDom[0].pJS.fn.vendors.destroypJS();
+                window.pJSDom = [];
             }
-        ]
-    }
+            particlesElement.innerHTML = '';
 
+            // Initialize particles with appropriate config
+            particlesJS('particles-js', isDarkMode ? darkParticleConfig : lightParticleConfig);
+            particlesElement.style.visibility = 'visible';
+            particlesElement.style.opacity = isDarkMode ? '0.6' : '0.4';
+        }
 
-
-# Gallery Section
-
-def get_event_images(event_id):
-    """Get all images for a specific event from the gallery directory"""
-    event_path = os.path.join(STATIC_DIR, 'images', 'gallery', event_id)
-    
-    if not os.path.exists(event_path):
-        print(f"Directory does not exist: {event_path}")
-        return []
-    
-    image_files = []
-    for ext in ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG']:
-        pattern = os.path.join(event_path, f'*.{ext}')
-        image_files.extend(glob(pattern))
-    
-    # Simplified return without captions
-    return [{'src': f"images/gallery/{event_id}/{os.path.basename(img)}"} 
-            for img in set(image_files)]
-
-GALLERY_DATA = {
-    'power-bi': {
-        'title': 'Exploring Power BI',
-        'date': 'October 12, 2024',
-        'description': 'Introduction to Power BI, fundamentals and best practices.',
-    },
-    'crack-the-code': {
-        'title': 'Crack the Code: Strategies to Dominate a hackathon',
-        'date': 'Oct 8, 2024',
-        'description': 'Equip students with strategies, insights, and real-world tips on hackathons.',
-    },
-    'inauguration': {
-        'title': 'Student Chapter Inauguration',
-        'date': 'May 14, 2024',
-        'description': 'Inauguration by District Collector of Kottayam',
-    }
-}
-
-@app.route('/gallery')
-def gallery():
-    event_id = request.args.get('event')
-    view = request.args.get('view')
-    
-    if event_id and event_id in GALLERY_DATA:
-        event_data = GALLERY_DATA[event_id].copy()
-        event_data['images'] = get_event_images(event_id)
-        return render_template('gallery.html', gallery_data=GALLERY_DATA, event_data=event_data, view=view)
-    
-    if view == 'all':
-        for event_id in GALLERY_DATA:
-            GALLERY_DATA[event_id]['images'] = get_event_images(event_id)
-    else:
-        # For the gallery overview, get only the first image from each event
-        for event_id in GALLERY_DATA:
-            images = get_event_images(event_id)
-            GALLERY_DATA[event_id]['images'] = images[:1] if images else []
-            print(f"Overview images for {event_id}: {GALLERY_DATA[event_id]['images']}")  # Debug print
-    
-    return render_template('gallery.html', gallery_data=GALLERY_DATA, event_data=None, view=view)
-
-
-
-# Registration Section 
-
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def send_registration_email(form_data, file_data):
-    sender_email = os.getenv('EMAIL_ID')
-    app_password = os.getenv('APP_PASSWORD')
-    
-    # Create the email message
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = sender_email  # Sending to yourself
-    msg['Subject'] = f"New Event Registration: {form_data['event']}"
-    
-    # Email body
-    body = f"""
-    New Registration Details:
-    
-    Full Name: {form_data['full_name']}
-    Phone: {form_data['phone']}
-    Email: {form_data['email']}
-    College: {form_data['college']}
-    Event: {form_data['event']}
-    """
-    msg.attach(MIMEText(body, 'plain'))
-    
-    # Attach payment proof if provided
-    if file_data:
-        # Create image attachment directly from the file data
-        img = MIMEImage(file_data)
-        img.add_header('Content-Disposition', 'attachment', filename='payment_proof.jpg')
-        msg.attach(img)
-    
-    # Send the email
-    try:
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-            server.starttls()
-            server.login(sender_email, app_password)
-            server.send_message(msg)
-        return True
-    except Exception as e:
-        print(f"Error sending email: {e}")
-        return False
-
-@app.route('/registration', methods=['GET', 'POST'])
-def register():
-    events_data = get_events_data()
-    available_events = [event for event in events_data['upcoming'] 
-                       if event['registration_enabled'] == 1]
-    
-    if request.method == 'POST':
-        try:
-            # Get form data
-            form_data = {
-                'full_name': request.form.get('full_name'),
-                'phone': request.form.get('phone'),
-                'email': request.form.get('email'),
-                'college': request.form.get('college'),
-                'event': request.form.get('event')
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial setup
+            initParticles();
+            
+            // Watch for theme changes using Alpine.js
+            if (typeof Alpine !== 'undefined') {
+                Alpine.effect(() => {
+                    initParticles();
+                });
             }
-            
-            # Validate required fields
-            if not all(form_data.values()):
-                flash('Please fill in all required fields.', 'error')
-                app.logger.warning('Form validation failed: missing required fields')
-                return redirect(url_for('register'))
-            
-            # Handle file data
-            file_data = None
-            if 'payment_proof' in request.files:
-                file = request.files['payment_proof']
-                if file and file.filename and allowed_file(file.filename):
-                    file_data = file.read()
-                else:
-                    flash('Please upload a valid image file (PNG, JPG, JPEG, or GIF).', 'error')
-                    app.logger.warning('Invalid file upload attempt')
-                    return redirect(url_for('register'))
-            else:
-                flash('Payment proof is required.', 'error')
-                app.logger.warning('No file uploaded')
-                return redirect(url_for('register'))
-            
-            # Send email
-            email_sent = send_registration_email(form_data, file_data)
-            if email_sent:
-                app.logger.info(f'Registration successful for: {form_data["email"]}')
-                flash(f'Registration successful, {form_data["full_name"]}!', 'success')
-            else:
-                app.logger.error(f'Email sending failed for: {form_data["email"]}')
-                flash('Registration failed. Please try again.', 'error')
-            
-            return redirect(url_for('register'))
-            
-        except Exception as e:
-            app.logger.error(f"Registration error: {str(e)}")
-            flash('An unexpected error occurred. Please try again or reach out via mail.', 'error')
-            return redirect(url_for('register'))
-    
-    return render_template('registration.html', available_events=available_events)
 
-# Webmasters Section ! Do not touch
+            // Additional theme change listener
+            const html = document.documentElement;
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'class') {
+                        initParticles();
+                    }
+                });
+            });
 
-WEBMASTERS_DATA = [
-    {
-        'name': 'Abin Roy',
-        'department': 'CSE 2022-2026',
-        'image': 'AbinR.jpg'
-    },
-    {
-        'name': 'Alen V A',
-        'department': 'CSE 2022-2026',
-        'image': 'AlenVA.jpg'
-    },
-    {
-        'name': 'Jeevan Thomas',
-        'department': 'CSE 2022-2026',
-        'image': 'JeevanT.png'
-    }
-]
+            observer.observe(html, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
 
-@app.route('/webmasters')
-def webmasters():
-    return render_template('webmasters.html', webmasters=WEBMASTERS_DATA)
+        });
 
-if __name__ == '__main__':
-    app.run(debug=False)
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible' && document.documentElement.classList.contains('dark')) {
+                initParticles();
+            }
+        });
+    </script>
+</body>
+</html>
