@@ -24,7 +24,7 @@
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ event.title }}</h3>
                 <p class="text-gray-600 dark:text-gray-300 mb-4">{{ event.description }}</p>
                 <div class="flex items-center justify-between">
-                    <span class="text-sm bg-{{ event.category.color }}-100 dark:bg-{{ event.category.color }}-200 text-{{ event.category.color }}-600 dark:text-{{ event.category.color }}-400 px-3 py-1 rounded-full">{{ event.category.name }}</span>
+                    <span class="text-sm text-white bg-{{ event.category.color }}-600 dark:bg-{{ event.category.color }}-700 px-3 py-1 rounded-full">{{ event.category.name }}</span>
                     {% if event.registration_enabled %}
                     <a href="{{ url_for('register') }}" 
                         class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">
@@ -52,7 +52,7 @@
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ event.title }}</h3>
                     <p class="text-gray-600 dark:text-gray-300 mb-4">{{ event.description }}</p>
                     <div class="flex items-center justify-between">
-                        <span class="text-sm bg-{{ event.category.color }}-100 dark:bg-{{ event.category.color }}-200 text-{{ event.category.color }}-600 dark:text-{{ event.category.color }}-400 px-3 py-1 rounded-full">{{ event.category.name }}</span>
+                        <span class="text-sm text-white bg-{{ event.category.color }}-600 dark:bg-{{ event.category.color }}-700 px-3 py-1 rounded-full">{{ event.category.name }}</span>
                         <a href="{{ url_for('gallery', event=event.gallery_link) }}" 
                             class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">
                             View Highlights →
