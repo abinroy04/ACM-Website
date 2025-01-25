@@ -294,7 +294,7 @@
                 number: { value: 80, density: { enable: true, value_area: 800 } },
                 color: { value: "#314259" }, // Gray color for light theme
                 shape: { type: "circle" },
-                opacity: { value: 0.9, random: false },
+                opacity: { value: 1, random: false },
                 size: { value: 3, random: true },
                 line_linked: { enable: false },
                 move: {
@@ -304,7 +304,7 @@
                     random: true,
                     straight: false,
                     out_mode: "out",
-                    bounce: false
+                    bounce: true
                 }
             },
             interactivity: {
@@ -334,7 +334,7 @@
                 number: { value: 80, density: { enable: true, value_area: 800 } },
                 color: { value: "#6366f1" }, // Indigo color for dark theme
                 shape: { type: "circle" },
-                opacity: { value: 0.8, random: false },
+                opacity: { value: 0.9, random: false },
                 size: { value: 3, random: true },
                 line_linked: { enable: false },
                 move: {
@@ -382,7 +382,7 @@
             // Initialize particles with appropriate config
             particlesJS('particles-js', isDarkMode ? darkParticleConfig : lightParticleConfig);
             particlesElement.style.visibility = 'visible';
-            particlesElement.style.opacity = isDarkMode ? '0.6' : '0.4';
+            particlesElement.style.opacity = isDarkMode ? '0.8' : '0.3';
         }
 
         document.addEventListener('DOMContentLoaded', function() {
