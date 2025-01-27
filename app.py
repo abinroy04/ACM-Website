@@ -40,8 +40,8 @@ def contact():
             # Email configuration
             msg = MIMEMultipart()
             msg['From'] = os.environ.get('EMAIL_ID')
-            msg['To'] = os.environ.get('EMAIL_ID')  # or your desired email
-            msg['Subject'] = f"Contact Form Message from {name}"
+            msg['To'] = os.environ.get('EMAIL_ID')
+            msg['Subject'] = f"ACM Student Chapter Contact Form Message from {name}"
             
             body = f"""
             Name: {name}
@@ -179,17 +179,6 @@ def get_events_data():
                 'registration_fee': 250,
                 'event_id': 'lumino_25'
             },
-            {
-                'image': 'Workshop.jpg',
-                'status': {'text': 'Upcoming', 'color': 'blue'},#Change to green for registration open
-                'date': 'March 2025',
-                'title': 'BootCamp with TCS',
-                'description': 'Learn modern web development techniques with hands-on practice sessions.',
-                'category': {'name': 'Workshop', 'color': 'blue'},
-                'registration_enabled': 0,
-                'registration_fee': 100,
-                'event_id': 'bootcamp_tcs'
-            }
         ],
         'past': [
             {
@@ -298,6 +287,7 @@ def send_registration_email(form_data, file_data):
     
     # Email body
     body = f"""
+    ACM Student Chapter
     New Registration Details:
     
     Full Name: {form_data['full_name']}
