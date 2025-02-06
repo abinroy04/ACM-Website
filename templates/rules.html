@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Rules & Regulations - Saintgits ACM Student Chapter{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8 bg-black bg-opacity-0 backdrop-blur-sm">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Rules and Regulations</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-300">
+            24-Hour Website Creation Competition
+        </p>
+    </div>
+
+    <div class="prose prose-lg dark:prose-invert max-w-none">
+        <div class="bg-white bg-opacity-50 dark:bg-dark-secondary dark:bg-opacity-50 rounded-2xl shadow-md p-8 mb-8">
+            <div class="mb-8">
+                <p class="text-lg mb-4">
+                    <strong> Event Title:</strong>Web Canvas: Website Creation Hackathon<br>
+                    <strong>Duration:</strong> 24 Hours<br>
+                    <strong>Team Size:</strong> 2 - 4 Participants per Team
+                </p>
+            </div>
+
+            <!-- General Rules -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">1. General Rules</h2>
+                <ol class="list-decimal pl-6 space-y-2">
+                    <li>The competition is open to all eligible participants who have registered before the deadline.</li>
+                    <li>Each team must consist of <strong>2 - 4 members</strong>. No individual participation is allowed.</li>
+                    <li>The competition will run for <strong>24 hours continuously</strong>, and all submissions must be made before the deadline.</li>
+                    <li>The problem statement will be released at the beginning of the competition, and teams must adhere to the given requirements.</li>
+                    <li>All work must be original. Any form of plagiarism or copying existing websites will result in disqualification.</li>
+                    <li>External templates, themes, or pre-built website builders (such as WordPress, Wix, or Squarespace) <strong>are not allowed</strong>. However, teams may use frontend frameworks like React, Vue.js, Bootstrap, Tailwind CSS, or backend frameworks like Flask, Django, or Express.js.</li>
+                </ol>
+            </section>
+
+            <!-- Technical Rules -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">2. Technical Rules</h2>
+                <ol class="list-decimal pl-6 space-y-2">
+                    <li>Teams are free to use <strong>any programming languages and frameworks</strong> for frontend and backend development.</li>
+                    <li>The website must be <strong>responsive and functional across multiple devices</strong>.</li>
+                    <!--
+                    <li>Required pages and features:
+                        <ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li>Homepage</li>
+                            <li>About Us</li>
+                            <li>Services</li>
+                            <li>Portfolio</li>
+                            <li>Blog</li>
+                            <li>Contact Page</li>
+                            <li>Join Us Page</li>
+                        </ul>
+                    </li>
+                    <li>Contact Form and Join Us Form must be fully functional.</li>
+                    -->
+                    <li>All assets must be royalty-free or self-created.</li>
+                </ol>
+            </section>
+
+            <!-- Judging Criteria -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">3. Judging Criteria</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 text-left">Criteria</th>
+                                <th class="px-4 py-2 text-left">Weightage</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <tr>
+                                <td class="px-4 py-2">Design & Aesthetics</td>
+                                <td class="px-4 py-2">20%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">Functionality</td>
+                                <td class="px-4 py-2">20%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">User Experience (UX)</td>
+                                <td class="px-4 py-2">20%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">Technical Implementation</td>
+                                <td class="px-4 py-2">20%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">Completion & Innovation</td>
+                                <td class="px-4 py-2">20%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Prizes -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">4. Prizes & Recognition</h2>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>First Place:</strong> Certificate of Achievement + INR 5000</li>
+                    <li><strong>Second Place:</strong> Certificate of Excellence + INR 2500</li>
+                    <li><strong>Third Place:</strong> Certificate of Merit</li>
+                    <li><strong>All Participants:</strong> Digital Certificate of Participation</li>
+                </ul>
+            </section>
+
+            <!-- Registration Button -->
+            <div class="mt-12 text-center">
+                <a href="{{ url_for('register') }}" 
+                   class="inline-block bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors">
+                    Register Now
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
