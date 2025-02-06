@@ -52,7 +52,7 @@
                         <option value="" class="dark:bg-gray-700 dark:text-gray-200">Select an event</option>
                         {% for event in available_events %}
                         <option value="{{ event.event_id }}" class="dark:bg-gray-700 dark:text-gray-200">
-                            {{ event.title }}; Fee: ₹{{ event.registration_fee }}
+                            {{ event.title }}; Fee: ₹{{ event.registration_fee }} per participant
                         </option>
                         {% endfor %}
                     </select>
