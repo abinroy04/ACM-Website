@@ -158,25 +158,14 @@ def get_events_data():
     return {
         'upcoming': [
             {
-                'image': 'competition.jpeg',
-                'status': {'text': 'Upcoming', 'color': 'green'}, #Change to green for registration open
-                'date': 'February 2025',
-                'title': 'CSS Styling Competition',
-                'description': 'Showcase your CSS skills and creativity in a fun and competitive environment.',
-                'category': {'name': 'Competition', 'color': 'green'},
-                'registration_enabled': 0,
-                'registration_fee': 0,
-                'event_id': 'css_styling'
-            },
-            {
                 'image': 'hackathon.jpeg',
-                'status': {'text': 'Upcoming', 'color': 'green'}, #Change to green for registration open
-                'date': 'March, 2025',
+                'status': {'text': 'Upcoming', 'color': 'green'},
+                'date': '13 February - 14 February',
                 'title': 'Lumino 25',
-                'description': '30-hour coding challenge to solve real-world problems with innovative solutions.',
+                'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
                 'category': {'name': 'Competition', 'color': 'green'},
-                'registration_enabled': 0,
-                'registration_fee': 250,
+                'registration_enabled': 1,
+                'registration_fee': 300,
                 'event_id': 'lumino_25'
             },
         ],
