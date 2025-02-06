@@ -268,33 +268,34 @@ def send_registration_email(form_data, file_data):
     sender_email = os.getenv('EMAIL_ID')
     app_password = os.getenv('APP_PASSWORD')
     
+    # Create the email message
     msg = MIMEMultipart()
     msg['From'] = sender_email
-    msg['To'] = sender_email
+    msg['To'] = sender_email  # Sending to yourself
     msg['Subject'] = f"New Event Registration: {form_data['event']}"
     
+    # Email body
     body = f"""
-ACM Student Chapter
-New Registration Details:
-
-Full Name: {form_data['full_name']}
-Phone: {form_data['phone']}
-Email: {form_data['email']}
-Team: {form_data['team']}
-College: {form_data['college']}
-Event: {form_data['event']}
+    ACM Student Chapter
+    New Registration Details:
+    
+    Full Name: {form_data['full_name']}
+    Phone: {form_data['phone']}
+    Email: {form_data['email']}
+    Team: {form_data['team']}
+    College: {form_data['college']}
+    Event: {form_data['event']}
     """
-    if form_data.get('member_names'):
-        members = "\n".join(form_data['member_names'])
-        body += f"\nTeam Members:\n{members}"
-        
     msg.attach(MIMEText(body, 'plain'))
     
+    # Attach payment proof if provided
     if file_data:
+        # Create image attachment directly from the file data
         img = MIMEImage(file_data)
         img.add_header('Content-Disposition', 'attachment', filename='payment_proof.jpg')
         msg.attach(img)
     
+    # Send the email
     try:
         with smtplib.SMTP('smtp.gmail.com', 587) as server:
             server.starttls()
@@ -313,22 +314,22 @@ def register():
     
     if request.method == 'POST':
         try:
+            # Get form data
             form_data = {
                 'full_name': request.form.get('full_name'),
                 'phone': request.form.get('phone'),
                 'email': request.form.get('email'),
-                'team': request.form.get('team'),
                 'college': request.form.get('college'),
-                'event': request.form.get('event'),
-                'member_names': request.form.getlist('member_names[]')
+                'event': request.form.get('event')
             }
             
             # Validate required fields
-            if not form_data['full_name'] or not form_data['phone'] or not form_data['email'] or not form_data['team'] or not form_data['college'] or not form_data['event']:
+            if not all(form_data.values()):
                 flash('Please fill in all required fields.', 'error')
                 app.logger.warning('Form validation failed: missing required fields')
                 return redirect(url_for('register'))
             
+            # Handle file data
             file_data = None
             if 'payment_proof' in request.files:
                 file = request.files['payment_proof']
@@ -343,6 +344,7 @@ def register():
                 app.logger.warning('No file uploaded')
                 return redirect(url_for('register'))
             
+            # Send email
             email_sent = send_registration_email(form_data, file_data)
             if email_sent:
                 app.logger.info(f'Registration successful for: {form_data["email"]}')
@@ -359,6 +361,10 @@ def register():
             return redirect(url_for('register'))
     
     return render_template('registration.html', available_events=available_events)
+
+@app.route('/rules')
+def rules():
+    return render_template('rules.html')
 
 # Webmasters Section ! Do not touch
 
