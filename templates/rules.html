@@ -108,10 +108,16 @@
 
             <!-- Registration Button -->
             <div class="mt-12 text-center">
+                {% if event and event.registration_enabled == 1 %}
                 <a href="{{ url_for('register') }}" 
                    class="inline-block bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors">
                     Register Now
                 </a>
+                {% else %}
+                <span class="inline-block bg-gray-400 text-white px-8 py-3 rounded-md cursor-not-allowed">
+                    Registration Will Open Soon
+                </span>
+                {% endif %}
             </div>
         </div>
     </div>
