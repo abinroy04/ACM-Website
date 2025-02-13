@@ -164,7 +164,7 @@ def get_events_data():
                 'title': 'Lumino 25',
                 'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
                 'category': {'name': 'Competition', 'color': 'green'},
-                'registration_enabled': 1,
+                'registration_enabled': 0,
                 'registration_fee': 300,
                 'event_id': 'lumino_25'
             },
