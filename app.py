@@ -160,7 +160,7 @@ def get_events_data():
             {
                 'image': 'hackathon.jpeg',
                 'status': {'text': 'Upcoming', 'color': 'green'},
-                'date': '21 February - 22 February',
+                'date': '13 February - 14 February',
                 'title': 'Lumino 25',
                 'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
                 'category': {'name': 'Competition', 'color': 'green'},
@@ -364,7 +364,10 @@ def register():
 
 @app.route('/rules')
 def rules():
-    return render_template('rules.html')
+    events_data = get_events_data()
+    # Get the first upcoming event since that's what we're showing rules for
+    current_event = events_data['upcoming'][0] if events_data['upcoming'] else None
+    return render_template('rules.html', event=current_event)
 
 # Webmasters Section ! Do not touch
 
