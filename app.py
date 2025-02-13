@@ -160,7 +160,7 @@ def get_events_data():
             {
                 'image': 'hackathon.jpeg',
                 'status': {'text': 'Upcoming', 'color': 'green'},
-                'date': '13 February - 14 February',
+                'date': '20 February - 21 February',
                 'title': 'Lumino 25',
                 'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
                 'category': {'name': 'Competition', 'color': 'green'},
