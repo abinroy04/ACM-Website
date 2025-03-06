@@ -7,6 +7,7 @@ from email.mime.image import MIMEImage
 from dotenv import load_dotenv
 from glob import glob
 from functools import wraps
+from datetime import datetime
 
 load_dotenv()
 
@@ -160,22 +161,11 @@ def get_events_data():
             {
                 'image': 'hackathon.jpeg',
                 'status': {'text': 'Upcoming', 'color': 'green'},
-                'date': '15 March - 16 March',
+                'date': '21 February - 22 February',
                 'title': 'Lumino 25',
                 'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
                 'category': {'name': 'Competition', 'color': 'green'},
-                'registration_enabled': 1,
-                'registration_fee': 300,
-                'event_id': 'lumino_25'
-            },
-            {
-                'image': 'hackathon.jpeg',
-                'status': {'text': 'Upcoming', 'color': 'green'},
-                'date': '14 March - 15 March',
-                'title': 'Lumino 25.1',
-                'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
-                'category': {'name': 'Competition', 'color': 'green'},
-                'registration_enabled': 1,
+                'registration_enabled': 0,
                 'registration_fee': 300,
                 'event_id': 'lumino_25'
             },
@@ -284,12 +274,14 @@ def send_registration_email(form_data, file_data):
     msg['From'] = sender_email
     msg['To'] = sender_email  # Sending to yourself
     msg['Subject'] = f"New Event Registration: {form_data['event']}"
+    timestamp = datetime.now().strftime("%B %d, %Y at %I:%M %p")
     
     # Email body
     body = f"""
     ACM Student Chapter
     New Registration Details:
     
+    Registration Time: {timestamp}
     Full Name: {form_data['full_name']}
     Phone: {form_data['phone']}
     Email: {form_data['email']}
