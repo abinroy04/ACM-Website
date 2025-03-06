@@ -322,6 +322,7 @@ def register():
                 'full_name': request.form.get('full_name'),
                 'phone': request.form.get('phone'),
                 'email': request.form.get('email'),
+                'team': request.form.get('team'),
                 'college': request.form.get('college'),
                 'event': request.form.get('event')
             }
