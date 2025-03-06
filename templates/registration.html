@@ -177,7 +177,7 @@
         const memberFields = document.getElementById('member-fields');
         let memberCount = 0;
         addMemberBtn.addEventListener('click', function() {
-            if (memberCount <3) {
+            if (memberCount <2) {
                 memberCount++;
                 const input = document.createElement('input');
                 input.type = 'text';
@@ -186,7 +186,7 @@
                 input.className = "w-full mt-2 px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400";
                 memberFields.appendChild(input);
             } else {
-                alert('Maximum 4 team member names allowed.');
+                alert('Maximum 3 team member names allowed.');
             }
         });
     });
