@@ -269,14 +269,16 @@ def send_registration_email(form_data, file_data):
     sender_email = os.getenv('EMAIL_ID')
     app_password = os.getenv('APP_PASSWORD')
     
-    # Create the email message
     msg = MIMEMultipart()
     msg['From'] = sender_email
-    msg['To'] = sender_email  # Sending to yourself
+    msg['To'] = sender_email
     msg['Subject'] = f"New Event Registration: {form_data['event']}"
     timestamp = datetime.now().strftime("%B %d, %Y at %I:%M %p")
     
-    # Email body
+    # Get team members from form data
+    team_members = form_data.get('member_names', [])
+    team_members_text = "\n".join([f"- {member}" for member in team_members]) if team_members else "No additional team members"
+    
     body = f"""
     ACM Student Chapter
     New Registration Details:
@@ -288,6 +290,9 @@ def send_registration_email(form_data, file_data):
     Team: {form_data['team']}
     College: {form_data['college']}
     Event: {form_data['event']}
+    
+    Team Members:
+    {team_members_text}
     """
     msg.attach(MIMEText(body, 'plain'))
     
@@ -317,14 +322,15 @@ def register():
     
     if request.method == 'POST':
         try:
-            # Get form data
+            # Get form data including team members
             form_data = {
                 'full_name': request.form.get('full_name'),
                 'phone': request.form.get('phone'),
                 'email': request.form.get('email'),
                 'team': request.form.get('team'),
                 'college': request.form.get('college'),
-                'event': request.form.get('event')
+                'event': request.form.get('event'),
+                'member_names': request.form.getlist('member_names[]')  # Get list of team members
             }
             
             # Validate required fields
