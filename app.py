@@ -158,19 +158,33 @@ def get_events_data():
     """
     return {
         'upcoming': [
-            {
-                'image': 'hackathon.jpeg',
-                'status': {'text': 'Upcoming', 'color': 'green'},
-                'date': '15 March - 16 March',
-                'title': 'Lumino 25',
-                'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
-                'category': {'name': 'Competition', 'color': 'green'},
-                'registration_enabled': 0,
-                'registration_fee': 300,
-                'event_id': 'lumino_25'
-            },
+            #{
+            #    'image': 'hackathon.jpeg',
+            #    'status': {'text': 'Upcoming', 'color': 'green'},
+            #    'date': '15 March - 16 March',
+            #    'title': 'Lumino 25',
+            #    'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
+            #    'category': {'name': 'Competition', 'color': 'green'},
+            #    'registration_enabled': 0,
+            #    'registration_fee': 300,
+            #    'event_id': 'lumino_25'
+            #},'
         ],
         'past': [
+            {
+                'date': 'March 15 - March 16, 2025',
+                'title': 'Lumino 25: Web Canvas Hackathon',
+                'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
+                'category': {'name': 'Hackathon', 'color': 'green'},
+                'gallery_link': 'lumino-25-main'
+            },
+            {
+                'date': 'March 14 - March 15, 2025',
+                'title': 'Lumino 25: Elementary Hackathon',
+                'description': '24-hour event for first year students to enhance their skills and creativity in a fun environment.',
+                'category': {'name': 'Hackathon', 'color': 'green'},
+                'gallery_link': 'lumino-25-elementary'
+            },  
             {
                 'date': 'October 12, 2024',
                 'title': 'Exploring Power BI',
@@ -189,7 +203,7 @@ def get_events_data():
                 'date': 'May 14, 2024',
                 'title': 'Student Chapter Inauguration',
                 'description': 'Inaguration of the student chapter at Saintgits College of Engineering by the Honourable District Collector of Kottayam Smt. V. Vigneshwari IAS',
-                'category': {'name': 'Events', 'color': 'gray'},  # Changed from 'white' to 'gray'
+                'category': {'name': 'Events', 'color': 'gray'},
                 'gallery_link': 'inauguration'
             }
         ]
@@ -217,6 +231,16 @@ def get_event_images(event_id):
             for img in set(image_files)]
 
 GALLERY_DATA = {
+    'lumino-25-main': {
+        'title': 'Lumino 25: Web Canvas Hackathon',
+        'date' : 'March 15 - March 16, 2025',
+        'description': '24-hour website generation competition to showcase your skills and creativity in a fun and competitive environment.',
+    },
+    'lumino-25-elementary': {
+        'title': 'Lumino 25: Elementary Hackathon',
+        'date': 'March 14 - March 15, 2025',
+        'description': '24-hour event for first year students to enhance their skills and creativity in a fun environment.',
+    },
     'power-bi': {
         'title': 'Exploring Power BI',
         'date': 'October 12, 2024',
