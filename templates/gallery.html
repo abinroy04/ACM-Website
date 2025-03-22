@@ -4,127 +4,249 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <!-- Page Header -->
-    <div class="text-center mb-12">
+    <div class="text-center mb-12 reveal-fade">
         <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Event Gallery</h1>
         <p class="text-xl text-gray-600 dark:text-gray-300">Highlights from our past events and activities</p>
     </div>
 
+    <!-- View Switcher -->
     {% if not event_data %}
-        <!-- View Switcher -->
-        <div class="flex justify-end mb-6">
-            <a href="{{ url_for('events') }}" 
-               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z"/>
-                </svg>
-                <span>View All Events</span>
-            </a>
-        </div>
+    <div class="flex justify-end mb-6">
+        <a href="{{ url_for('events') }}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z"/>
+            </svg>
+            <span>View All Events</span>
+        </a>
+    </div>
     {% endif %}
 
     {% if event_data %}
-        <!-- Single Event Gallery View -->
-        <div class="mb-8">
-            <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ event_data.title }}</h2>
-                    <p class="text-gray-600 dark:text-gray-400">{{ event_data.date }}</p>
-                </div>
-                <a href="{{ url_for('gallery') }}" 
-                   class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 inline-flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>Back to Events</span>
-                </a>
+    <div class="mb-8 reveal-slide-up">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 sticky top-0 z-30 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md p-4 rounded-lg">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ event_data.title }}</h2>
+                <p class="text-gray-600 dark:text-gray-400">{{ event_data.date }}</p>
             </div>
-            <p class="text-gray-700 dark:text-gray-300 mb-8">{{ event_data.description }}</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-animation">
-                {% for image in event_data.images %}
-                <div class="relative group scroll-fade delay-{{ loop.index0 * 100 if loop.index0 < 6 else 500 }}">
-                    <img src="{{ url_for('static', filename=image.src) }}" 
-                        alt="Gallery Image"
-                        onclick="openModal(`{{ url_for('static', filename=image.src) }}`)"
-                        class="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105 cursor-pointer">
-     <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <a href="{{ url_for('static', filename=image.src) }}" 
-                           download
-                           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            <a href="{{ url_for('gallery') }}" 
+               class="group mt-4 md:mt-0 inline-flex items-center space-x-2 bg-transparent hover:bg-blue-50 dark:hover:bg-blue-900/20 px-4 py-2 rounded-full transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                </svg>
+                <span>Back to Events</span>
+            </a>
+        </div>
+        
+        <div class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4 p-4">
+            {% for image in event_data.images %}
+            <div class="break-inside-avoid group relative overflow-hidden rounded-xl reveal-scale" 
+                 style="animation-delay: {{ loop.index0 * 100 }}ms">
+                <img src="{{ url_for('static', filename=image.src) }}" 
+                     alt="Gallery Image"
+                     onclick="openImageViewer('{{ url_for('static', filename=image.src) }}')"
+                     class="w-full h-auto transform group-hover:scale-105 transition-transform duration-700 cursor-zoom-in">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div class="absolute bottom-4 right-4 flex space-x-2">
+                        <button onclick="downloadImage(`{{ url_for('static', filename=image.src) }}`); event.stopPropagation();"
+                                class="p-2 bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition-colors duration-300">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                             </svg>
-                            <span>Download</span>
-                        </a>
+                        </button>
+                        <button onclick="sharePage(`{{ url_for('static', filename=image.src) }}`); event.stopPropagation();"
+                                class="p-2 bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition-colors duration-300">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                            </svg>
+                        </button>
+                        <button onclick="openImageViewer(`{{ url_for('static', filename=image.src) }}`); event.stopPropagation();"
+                                class="p-2 bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition-colors duration-300">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
+    </div>
 
-        <!-- Image Modal -->
-        <div id="imageModal" class="fixed inset-0 z-50 hidden scrollbar-hide overflow-y-auto">
-            <!-- Changed background opacity and moved it behind the image -->
-            <div class="absolute inset-0 bg-black bg-opacity-75"></div>
+    <!-- Fullscreen Image Viewer -->
+    <div id="imageViewer" class="fixed inset-0 z-50 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out" onclick="closeImageViewer()">
+        <div class="relative max-w-[95vw] max-h-[95vh] overflow-hidden" onclick="event.stopPropagation()">
+            <img id="viewerImage" src="" alt="Enlarged Image" class="max-w-full max-h-[90vh] object-contain shadow-xl">
             
-            <!-- Scrollable Image Container -->
-            <div class="min-h-screen w-full flex items-center justify-center p-4 relative z-10">
-                <img id="modalImage" src="" alt="Modal Image" 
-                     class="max-w-[95vw] max-h-[90vh] object-contain rounded-lg">
-            </div>
-
-            <!-- Fixed Controls Container -->
-            <div class="fixed top-4 right-4 z-20 flex items-center space-x-4">
-                <button onclick="closeModal()" 
-                        class="bg-black/20 hover:bg-black/40 text-white p-2 rounded-lg transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <div class="absolute top-4 right-4 flex space-x-3">
+                <a id="viewerDownload" href="#" download class="p-2 bg-black/40 backdrop-blur-md hover:bg-black/60 rounded-full transition-colors duration-300 text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                </a>
+                <button onclick="closeImageViewer()" class="p-2 bg-black/40 backdrop-blur-md hover:bg-black/60 rounded-full transition-colors duration-300 text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
-                <a id="modalDownload" href="#" download 
-                   class="bg-blue-600/80 hover:bg-blue-700/90 text-white px-4 py-2 rounded-lg shadow-lg inline-flex items-center transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                    </svg>
-                    Download
-                </a>
             </div>
         </div>
+    </div>
 
-        <script>
-            function openModal(imageSrc) {
-                const modal = document.getElementById('imageModal');
-                const modalImg = document.getElementById('modalImage');
-                const downloadBtn = document.getElementById('modalDownload');
-                
-                modal.classList.remove('hidden');
-                modalImg.src = imageSrc;
-                downloadBtn.href = imageSrc;
-                document.body.classList.add('overflow-hidden');
-
-                // Add event listener for image load
-                modalImg.onload = function() {
-                    if (this.naturalHeight > window.innerHeight) {
-                        document.body.classList.remove('overflow-hidden');
-                    }
-                };
+    <script>
+        // Open image viewer
+        function openImageViewer(imageSrc) {
+            const viewer = document.getElementById('imageViewer');
+            const viewerImg = document.getElementById('viewerImage');
+            const downloadBtn = document.getElementById('viewerDownload');
+            
+            viewerImg.src = imageSrc;
+            downloadBtn.href = imageSrc;
+            
+            viewer.classList.remove('hidden');
+            viewer.classList.add('opacity-0');
+            
+            // Force browser reflow
+            void viewer.offsetWidth;
+            
+            viewer.classList.remove('opacity-0');
+            
+            // No longer preventing scroll
+            // document.body.classList.add('overflow-hidden');
+            
+            // Add swipe handling for mobile
+            viewer.addEventListener('touchstart', handleTouchStart);
+            viewer.addEventListener('touchmove', handleTouchMove);
+            viewer.addEventListener('touchend', handleTouchEnd);
+        }
+        
+        // Close image viewer
+        function closeImageViewer() {
+            const viewer = document.getElementById('imageViewer');
+            
+            viewer.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                viewer.classList.add('hidden');
+                // No longer needed since we're not preventing scroll
+                // document.body.classList.remove('overflow-hidden');
+            }, 300);
+            
+            // Remove swipe handlers
+            viewer.removeEventListener('touchstart', handleTouchStart);
+            viewer.removeEventListener('touchmove', handleTouchMove);
+            viewer.removeEventListener('touchend', handleTouchEnd);
+        }
+        
+        // Handle keyboard events
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageViewer();
             }
-
-            function closeModal() {
-                const modal = document.getElementById('imageModal');
-                modal.classList.add('hidden');
-                document.body.classList.remove('overflow-hidden');
+        });
+        
+        // Touch handling for mobile swipe to close
+        let touchStartY = 0;
+        let touchMoveY = 0;
+        
+        function handleTouchStart(e) {
+            touchStartY = e.touches[0].clientY;
+        }
+        
+        function handleTouchMove(e) {
+            touchMoveY = e.touches[0].clientY;
+        }
+        
+        function handleTouchEnd() {
+            const swipeDistance = touchMoveY - touchStartY;
+            
+            if (swipeDistance > 100) {
+                // Swipe down to close
+                closeImageViewer();
             }
+        }
 
-            // Close modal on escape key press
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeModal();
+        // Download image
+        function downloadImage(url) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = url.split('/').pop();
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function sharePage(url) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'ACM Gallery Image',
+                    url: url
+                });
+            }
+        }
+
+        // Reveal animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '50px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
                 }
             });
-        </script>
-    {% elif view == 'all' %}
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-scale, .reveal-fade, .reveal-slide-up').forEach((el) => observer.observe(el));
+    </script>
+
+    <style>
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-fade {
+            opacity: 0;
+            transition: opacity 0.6s ease-out;
+        }
+
+        .reveal-slide-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .revealed {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Animation for image viewer */
+        #imageViewer {
+            transition: opacity 0.3s ease;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background instead of solid black */
+            backdrop-filter: blur(3px); /* Add subtle blur for a modern look */
+        }
+        
+        #imageViewer.opacity-0 {
+            opacity: 0;
+        }
+        
+        /* Add white border and slight glow to the image */
+        #viewerImage {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+    {% endif %}
+
+    {% if view == 'all' %}
         <!-- All Photos Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 stagger-animation">
             {% for event_id, event in gallery_data.items() %}
@@ -132,9 +254,16 @@
                 <div class="relative group">
                     <img src="{{ url_for('static', filename=image.src) }}" 
                          alt="Gallery Image"
-                         onclick="openModal(`{{ url_for('static', filename=image.src) }}`)"
+                         onclick="openImageViewer(`{{ url_for('static', filename=image.src) }}`)"
                          class="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105 cursor-pointer">
-                    <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex space-x-2">
+                        <button onclick="openImageViewer(`{{ url_for('static', filename=image.src) }}`)"
+                                class="p-2 bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition-colors duration-300 text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
                         <a href="{{ url_for('static', filename=image.src) }}" 
                            download
                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2">
@@ -216,25 +345,132 @@
                 }
             });
         </script>
-    {% else %}
+    {% endif %}
+
+    {% if not event_data and view != 'all' %}
         <!-- All Events Gallery Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for event_id, event in gallery_data.items() %}
-            <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-md overflow-hidden">
-                <img src="{{ url_for('static', filename=event.images[0].src) }}" 
-                     alt="{{ event.title }}"
-                     class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ event.title }}</h3>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">{{ event.date }}</p>
-                    <a href="{{ url_for('gallery', event=event_id) }}" 
-                       class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 font-medium">
-                        View Gallery →
-                    </a>
+            <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-lg overflow-hidden reveal-card" 
+                 style="--delay: {{ loop.index0 * 100 }}ms">
+                <div class="relative h-80 group hover-tilt overflow-hidden" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.1">
+                    <!-- Main image -->
+                    <div class="absolute inset-0 transition-all duration-500 group-hover:scale-110">
+                        <img src="{{ url_for('static', filename=event.images[0].src) }}" 
+                             alt="{{ event.title }}"
+                             class="w-full h-80 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+                    </div>
+                    
+                    <!-- Image collage/stack overlay -->
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div class="w-full h-full relative">
+                            <!-- Stacked images with random rotation and position -->
+                            {% for image in event.images[1:5] if event.images|length > 1 %}
+                            {% set rand_rotate = range(-15, 15) | random %}
+                            {% set rand_x = range(-5, 5) | random %}
+                            {% set rand_y = range(-5, 5) | random %}
+                            {% set rand_scale = range(70, 85) | random / 100 %}
+                            {% set rand_top = range(10, 70) | random %}
+                            {% set rand_left = range(10, 70) | random %}
+                            <div class="absolute rounded-lg shadow-xl overflow-hidden"
+                                 style="top: {{ rand_top }}%; left: {{ rand_left }}%; width: 50%; height: 50%; transform: rotate({{ rand_rotate }}deg) translate({{ rand_x }}px, {{ rand_y }}px) scale({{ rand_scale }});">
+                                <img src="{{ url_for('static', filename=image.src) }}" 
+                                    alt="Gallery image"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Top right polaroid-style mini gallery -->
+                    <div class="absolute top-2 right-2 flex -space-x-2 opacity-70 group-hover:opacity-0 transition-opacity duration-300">
+                        {% for image in event.images[1:4] if event.images|length > 1 %}
+                        <div class="w-8 h-8 rounded-md overflow-hidden border-2 border-white shadow-lg">
+                            <img src="{{ url_for('static', filename=image.src) }}" 
+                                alt="Thumbnail" 
+                                class="w-full h-full object-cover">
+                        </div>
+                        {% endfor %}
+                        {% if event.images|length > 4 %}
+                        <div class="w-8 h-8 rounded-md bg-black/70 border-2 border-white shadow-lg flex items-center justify-center text-white text-xs">
+                            +{{ event.images|length - 4 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Text overlay at bottom -->
+                    <div class="absolute bottom-0 left-0 right-0 p-4 z-10">
+                        <h3 class="text-xl font-bold text-white mb-1 drop-shadow-md">{{ event.title }}</h3>
+                        <div class="flex justify-between items-center">
+                            <p class="text-gray-200 text-sm">{{ event.date }}</p>
+                            <p class="text-white text-sm bg-black/40 px-2 py-1 rounded-full">
+                                {{ event.images|length }} Photo{% if event.images|length != 1 %}s{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Debug info for troubleshooting image count -->
+                    <div class="hidden">
+                        Images count: {{ event.images|length }}
+                        {% for image in event.images %}
+                        - {{ image.src }}
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Overlay button to view gallery -->
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
+                        <a href="{{ url_for('gallery', event=event_id) }}" 
+                           class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-5 py-3 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 flex items-center space-x-2">
+                            <span>View Gallery</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
             {% endfor %}
         </div>
+
+        <!-- Add Vanilla Tilt.js for 3D hover effects -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+        <script>
+            // Initialize tilt effect
+            VanillaTilt.init(document.querySelectorAll(".hover-tilt"), {
+                max: 5,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.1,
+            });
+
+            // Animation for cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-card, .reveal-scale, .reveal-fade, .reveal-slide-up').forEach((el) => {
+                observer.observe(el);
+            });
+            
+            // Debug function to log event image counts to console
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('Checking event images:');
+                {% for event_id, event in gallery_data.items() %}
+                console.log('{{ event.title }}: {{ event.images|length }} images');
+                {% endfor %}
+            });
+        </script>
     {% endif %}
 </div>
 
@@ -246,6 +482,56 @@
     }
     .scrollbar-hide::-webkit-scrollbar {
         display: none;            /* Chrome, Safari and Opera */
+    }
+
+    /* Add stacking context for gallery items */
+    .relative {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .hover\:z-10:hover {
+        z-index: 10;
+    }
+
+    /* Animation classes */
+    .reveal-card {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        transition-delay: var(--delay, 0ms);
+    }
+
+    .reveal-scale {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-fade {
+        opacity: 0;
+        transition: opacity 0.6s ease-out;
+    }
+
+    .reveal-slide-up {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .revealed {
+        opacity: 1;
+        transform: none;
+    }
+
+    /* Add a subtle animation to cards on hover */
+    .reveal-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .reveal-card:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
 </style>
 {% endblock %}
